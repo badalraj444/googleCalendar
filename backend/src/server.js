@@ -1,36 +1,38 @@
-import express from "express";
-import "dotenv/config";
-
-// import cookieParser from "cookie-parser";
-import cors from "cors";
-import path from "path";
+// server.js
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./src/config/db"); // path you created earlier
+const eventRoutes = require("./src/routes/event.route");
 
 const app = express();
 
-const PORT = process.env.PORT; //
-
+// Middleware
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
+  origin: process.env.CORS_ORIGIN || "http://localhost:5173", // adjust if needed
 }));
-
-const __dirname = path.resolve();
-
 app.use(express.json());
-// app.use(cookieParser());
 
-// app.use("/api/users",userRoutes);
+// Connect to DB
+connectDB();
 
+// Routes
+app.get("/", (req, res) => res.json({ ok: true, msg: "Calendar API running" }));
+app.use("/api/events", eventRoutes);
 
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname,"../client","dist")));
-    app.get("*",(req,res)=>{
-        res.sendFile(path.join(__dirname,"../client","dist","index.html"));
-    });
-}
+// 404 handler
+app.use((req, res, next) => {
+  res.status(404).json({ error: "Not found" });
+});
 
-app.listen(PORT,()=>{
-    console.log(`server listening on port ${PORT}`);
-    console.log('all good');
-    // connectDB();
+// Basic error handler
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(err.status || 500).json({ error: err.message || "Server error" });
+});
+
+// Start
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server listening on http://localhost:${PORT}`);
 });

@@ -1,35 +1,27 @@
-// src/routes/event.route.js
-const express = require("express");
-const router = express.Router();
+// src/controllers/eventController.js
 const mongoose = require("mongoose");
 const Event = require("../models/EventSchema");
 
 /**
- * GET /events
+ * List events.
  * Optional query params:
- *  - from (ISO date string) : start of range (inclusive)
- *  - to   (ISO date string) : end of range (inclusive)
- *
- * If from/to provided, returns events that intersect the range.
- * Otherwise returns all events (careful with large datasets).
+ *  - from (ISO string)
+ *  - to   (ISO string)
  */
-router.get("/", async (req, res) => {
+async function listEvents(req, res) {
   try {
     const { from, to } = req.query;
 
     if (from || to) {
-      // build a range query that finds events that intersect [from, to]
       const q = [];
       if (from) {
         const fromDate = new Date(from);
         if (isNaN(fromDate)) return res.status(400).json({ error: "Invalid 'from' date" });
-        // event.end >= from OR (no end and start >= from)
         q.push({ $or: [{ end: { $gte: fromDate } }, { end: null, start: { $gte: fromDate } }] });
       }
       if (to) {
         const toDate = new Date(to);
         if (isNaN(toDate)) return res.status(400).json({ error: "Invalid 'to' date" });
-        // event.start <= to
         q.push({ start: { $lte: toDate } });
       }
 
@@ -41,15 +33,15 @@ router.get("/", async (req, res) => {
     const events = await Event.find({}).sort({ start: 1 }).lean();
     return res.json(events);
   } catch (err) {
-    console.error("GET /events error:", err);
+    console.error("listEvents error:", err);
     return res.status(500).json({ error: "Server error" });
   }
-});
+}
 
 /**
- * GET /events/:id
+ * Get single event by id
  */
-router.get("/:id", async (req, res) => {
+async function getEvent(req, res) {
   try {
     const { id } = req.params;
     if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: "Invalid event id" });
@@ -58,16 +50,16 @@ router.get("/:id", async (req, res) => {
     if (!event) return res.status(404).json({ error: "Event not found" });
     return res.json(event);
   } catch (err) {
-    console.error("GET /events/:id error:", err);
+    console.error("getEvent error:", err);
     return res.status(500).json({ error: "Server error" });
   }
-});
+}
 
 /**
- * POST /events
- * Body: { title, description?, start, end?, allDay?, remindAt?, label?, color? }
+ * Create a new event
+ * Body: { title, description?, start, end?, allDay?, remindAt?, label?, color?, recurringRule?, parentEventId? }
  */
-router.post("/", async (req, res) => {
+async function createEvent(req, res) {
   try {
     const { title, description, start, end, allDay, remindAt, label, color, recurringRule, parentEventId } = req.body;
 
@@ -98,16 +90,16 @@ router.post("/", async (req, res) => {
     const saved = await doc.save();
     return res.status(201).json(saved);
   } catch (err) {
-    console.error("POST /events error:", err);
+    console.error("createEvent error:", err);
     return res.status(500).json({ error: "Server error" });
   }
-});
+}
 
 /**
- * PUT /events/:id
- * Replace/update full event document (you can use PATCH for partial updates)
+ * Update an existing event (PUT)
+ * Accepts the same fields as create; partial updates allowed.
  */
-router.put("/:id", async (req, res) => {
+async function updateEvent(req, res) {
   try {
     const { id } = req.params;
     if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: "Invalid event id" });
@@ -130,15 +122,15 @@ router.put("/:id", async (req, res) => {
     if (!updated) return res.status(404).json({ error: "Event not found" });
     return res.json(updated);
   } catch (err) {
-    console.error("PUT /events/:id error:", err);
+    console.error("updateEvent error:", err);
     return res.status(500).json({ error: "Server error" });
   }
-});
+}
 
 /**
- * DELETE /events/:id
+ * Delete an event
  */
-router.delete("/:id", async (req, res) => {
+async function deleteEvent(req, res) {
   try {
     const { id } = req.params;
     if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: "Invalid event id" });
@@ -147,9 +139,15 @@ router.delete("/:id", async (req, res) => {
     if (!deleted) return res.status(404).json({ error: "Event not found" });
     return res.json({ ok: true });
   } catch (err) {
-    console.error("DELETE /events/:id error:", err);
+    console.error("deleteEvent error:", err);
     return res.status(500).json({ error: "Server error" });
   }
-});
+}
 
-module.exports = router;
+module.exports = {
+  listEvents,
+  getEvent,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+};

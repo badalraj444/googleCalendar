@@ -43,3 +43,5 @@ backend/dist/
 # Frontend
 client/node_modules/
 backend/node_modules/
+
+notepad.txt

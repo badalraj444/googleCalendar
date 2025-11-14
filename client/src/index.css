@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+
+/* small design tokens via CSS variables (optional) */
+:root{
+  --gc-primary: #1a73e8;
+  --gc-surface: #ffffff;
+  --gc-muted: #9aa4b2;
+  --gc-panel-shadow: 0 6px 18px rgba(12,24,48,0.08);
+  --gc-radius: 12px;
+}
+
+/* small helpers */
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--gc-surface);
+}
+
+/* small utility override for calendar events if needed */
+.fc-event {
+  border-radius: 8px;
+  box-shadow: var(--gc-panel-shadow);
+}

@@ -11,11 +11,7 @@ export default function CalendarShell({ currentView }) {
           <div className="h-[540px] flex flex-col items-center justify-center text-muted gap-4">
             <div className="text-2xl font-semibold mb-2">Calendar Canvas</div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className="p-4 rounded-xl bg-primary-300">primary-300</div>
-              <div className="p-4 rounded-xl bg-accent-50">accent-50</div>
-              <div className="p-4 rounded-xl bg-brand text-white">brand (css var)</div>
-            </div>
+           
 
             <div className="mt-4 flex items-center gap-3">
               <button className="px-4 py-2 rounded-xl bg-primary text-primary-foreground shadow-soft">Primary button</button>

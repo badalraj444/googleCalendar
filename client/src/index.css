@@ -1,8 +1,73 @@
+/* src/index.css
+   Tailwind v4 theme + helpers (replace your existing file)
+*/
+
 @import "tailwindcss";
+@import "tw-animate-css";
 
 
-/* small design tokens via CSS variables (optional) */
-:root{
+
+/* keep custom variant if used */
+@custom-variant dark (&:is(.dark *));
+
+/* ----------- THEME VARIABLES (Tailwind v4 style) ----------- */
+@theme {
+  /* Primary (multi shades) */
+  --color-primary-50:  #eef6ff;
+  --color-primary-100: #d7ebff;
+  --color-primary-200: #aed8ff;
+  --color-primary-300: #7cc0ff;
+  --color-primary-400: #4aa7ff;
+  --color-primary:      #1a73e8;   /* use as bg-primary */
+  --color-primary-600: #155ec1;
+  --color-primary-700: #10489a;
+  --color-primary-800: #0b346f;
+  --color-primary-900: #071f44;
+  --color-primary-foreground: #ffffff;
+
+  /* Accent */
+  --color-accent-50:  #fff8e6;
+  --color-accent-100: #fff0cc;
+  --color-accent-200: #ffe199;
+  --color-accent-300: #ffd266;
+  --color-accent-400: #ffc233;
+  --color-accent:      #ffb100;
+
+  /* Brand / extras (your css vars) */
+  --color-brand-100: #EA6365;
+  --color-brand:     #FA7275;
+  --color-brand2:    #E6E4B9;
+  --color-red:       #FF7474;
+  --color-error:     #b80000;
+  --color-green:     #3DD9B3;
+  --color-blue:      #56B8FF;
+  --color-pink:      #EEA8FD;
+  --color-orange:    #F9AB72;
+
+  /* Muted / UI */
+  --color-muted:     #9aa4b2;
+  --color-light-100: #333F4E;
+  --color-light-200: #A3B2C7;
+  --color-light-300: #F2F5F9;
+  --color-light-400: #F2F4F8;
+
+  --color-dark-100: #04050C;
+  --color-dark-200: #131524;
+
+  --color-ui-bg:     #ffffff;
+  --color-ui-surface: #f7fafc;
+  --color-ui-panel:  #ffffff;
+  --color-ui-border: #e6edf3;
+
+  /* shadows */
+  --shadow-soft: 0 6px 18px rgba(12,24,48,0.08);
+
+  /* misc */
+  --radius-md: 12px;
+}
+
+/* fallback tokens if @theme variables aren't applied at runtime */
+:root {
   --gc-primary: #1a73e8;
   --gc-surface: #ffffff;
   --gc-muted: #9aa4b2;
@@ -10,14 +75,40 @@
   --gc-radius: 12px;
 }
 
-/* small helpers */
+/* map a few helper classes (Tailwind v4 will auto-generate many bg-<name> utils,
+   but we also create explicit helpers and shadows for immediate use) */
+.bg-brand { background-color: var(--color-brand); }
+.bg-brand-100 { background-color: var(--color-brand-100); }
+.text-brand { color: var(--color-brand); }
+
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-50 { background-color: var(--color-primary-50); }
+.text-primary-foreground { color: var(--color-primary-foreground); }
+
+.bg-accent-400 { background-color: var(--color-accent-400); }
+.bg-accent-50  { background-color: var(--color-accent-50); }
+
+.bg-ui-panel { background-color: var(--color-ui-panel); }
+.border-ui-border { border-color: var(--color-ui-border); }
+
+.text-muted { color: var(--color-muted); }
+
+.shadow-soft { box-shadow: var(--shadow-soft); }
+
+/* app shell background using theme token */
 .app-shell {
   min-height: 100vh;
-  background-color: var(--gc-surface);
+  background-color: var(--color-ui-surface, var(--gc-surface));
+  color: var(--color-light-100, inherit);
 }
 
-/* small utility override for calendar events if needed */
+/* small override for FullCalendar events */
 .fc-event {
   border-radius: 8px;
   box-shadow: var(--gc-panel-shadow);
+}
+
+/* responsive helper for older md:inline usage we used in components */
+@media (max-width: 768px) {
+  .md\:inline { display: none; }
 }

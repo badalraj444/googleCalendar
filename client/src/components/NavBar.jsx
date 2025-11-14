@@ -5,7 +5,7 @@ export default function Navbar({ onToggleSidebar, isSidebarOpen, onChangeView, c
   const todayLabel = new Date().toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
 
   return (
-    <header className="w-full h-16 flex items-center px-4 border-b border-ui-border bg-ui.surface shadow-sm">
+    <header className="w-full h-16 flex items-center px-4 border-b border-ui-border bg-ui-panel shadow-sm">
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
@@ -13,40 +13,49 @@ export default function Navbar({ onToggleSidebar, isSidebarOpen, onChangeView, c
           aria-label="toggle sidebar"
         >
           {/* hamburger */}
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-700">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-light-100">
             <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
           </svg>
         </button>
 
         <div className="flex items-baseline gap-3">
-          <h1 className="text-lg font-semibold text-gray-800">Calendar</h1>
-          <span className="text-sm text-muted-500 hidden md:inline">{todayLabel}</span>
+          <h1 className="text-lg font-semibold text-light-100">Calendar</h1>
+          <span className="text-sm text-muted hidden md:inline">{todayLabel}</span>
+        </div>
+
+        {/* DEBUG: Tailwind + Theme test (Navbar) */}
+        <div className="ml-4 flex items-center gap-3">
+          <div className="px-3 py-1 rounded-xl bg-primary text-primary-foreground text-sm">primary</div>
+          <div className="px-3 py-1 rounded-xl bg-accent-400 text-black text-sm">accent-400</div>
+          <div className="px-3 py-1 rounded-xl bg-ui-panel border border-ui-border text-sm">ui-panel</div>
+          <div className="px-3 py-1 rounded-xl bg-brand text-white text-sm">bg-brand (css var)</div>
+          <span className="ml-2 text-muted hidden md:inline">muted (md:inline)</span>
         </div>
       </div>
 
       {/* center controls */}
       <div className="flex-1 flex items-center justify-center gap-3">
         <div className="flex items-center gap-2">
-          <button className="px-3 py-1 rounded-xl text-sm border border-ui-border bg-ui.panel hover:shadow-soft">
+          <button className="px-3 py-1 rounded-xl text-sm border border-ui-border bg-ui-panel hover:shadow-soft">
             Today
           </button>
 
           <div className="inline-flex items-center gap-1 rounded-xl border border-ui-border px-2 py-1">
             <button
               onClick={() => onChangeView("month")}
-              className={`px-2 py-1 text-sm rounded ${currentView === "month" ? "bg-primary-50 text-primary-700" : ""}`}
+              className={`px-2 py-1 text-sm rounded ${currentView === "month" ? "bg-primary text-primary-foreground" : ""}`}
             >
               Month
             </button>
             <button
               onClick={() => onChangeView("week")}
-              className={`px-2 py-1 text-sm rounded ${currentView === "week" ? "bg-primary-50 text-primary-700" : ""}`}
+              className={`px-2 py-1 text-sm rounded ${currentView === "week" ? "bg-primary text-primary-foreground" : ""}`}
             >
               Week
             </button>
             <button
               onClick={() => onChangeView("day")}
-              className={`px-2 py-1 text-sm rounded ${currentView === "day" ? "bg-primary-50 text-primary-700" : ""}`}
+              className={`px-2 py-1 text-sm rounded ${currentView === "day" ? "bg-primary text-primary-foreground" : ""}`}
             >
               Day
             </button>
@@ -70,7 +79,7 @@ export default function Navbar({ onToggleSidebar, isSidebarOpen, onChangeView, c
           </svg>
         </button>
 
-        <div className="w-9 h-9 rounded-full bg-primary-500 text-white flex items-center justify-center font-medium">J</div>
+        <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">J</div>
       </div>
     </header>
   );
